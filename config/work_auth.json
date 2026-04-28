@@ -1,0 +1,25 @@
+{
+  "Malaysia": {
+    "status": "citizen_or_PR",
+    "requires_sponsorship": false
+  },
+  "Singapore": {
+    "status": "requires_EP",
+    "requires_sponsorship": true,
+    "acceptable": true
+  },
+  "Australia": {
+    "status": "requires_sponsorship",
+    "visa_type": "482_TSS_or_186",
+    "requires_sponsorship": true,
+    "acceptable": true,
+    "condition": "employer must sponsor"
+  },
+  "Europe": {
+    "status": "requires_work_permit",
+    "requires_sponsorship": true,
+    "acceptable": true,
+    "condition": "employer must sponsor",
+    "eu_blue_card_eligible": true
+  }
+}

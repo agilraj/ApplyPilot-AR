@@ -172,6 +172,13 @@ def run_scoring(limit: int = 0, rescore: bool = False) -> dict:
     """).fetchall()
     distribution = [(row[0], row[1]) for row in dist]
 
+    # Tracker: sync scored jobs to the applications table
+    try:
+        from applypilot.tracker.queries import sync_scored_from_jobs
+        sync_scored_from_jobs()
+    except Exception as _tracker_err:
+        log.warning("Tracker write failed (score): %s", _tracker_err)
+
     return {
         "scored": len(results),
         "errors": errors,

@@ -1,0 +1,92 @@
+{
+  "remote": {
+    "accept": true,
+    "priority": 1
+  },
+
+  "preferred_locations": [
+    {
+      "city": "Kuala Lumpur",
+      "country": "Malaysia",
+      "priority": 2,
+      "max_commute_minutes": 45,
+      "relocation_required": false
+    }
+  ],
+
+  "acceptable_locations": [
+    {
+      "country": "Malaysia",
+      "note": "Anywhere in Malaysia",
+      "priority": 3,
+      "relocation_required": true,
+      "relocation_condition": "package dependent"
+    },
+    {
+      "country": "Singapore",
+      "priority": 4,
+      "relocation_required": true,
+      "relocation_condition": "package dependent"
+    },
+    {
+      "country": "Australia",
+      "priority": 5,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    },
+    {
+      "country": "Germany",
+      "priority": 6,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    },
+    {
+      "country": "Netherlands",
+      "priority": 6,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    },
+    {
+      "country": "UK",
+      "priority": 6,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    },
+    {
+      "country": "Sweden",
+      "priority": 7,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    },
+    {
+      "country": "Thailand",
+      "priority": 8,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    }
+  ],
+
+  "excluded_locations": [],
+
+  "hybrid_policy": {
+    "accept": true,
+    "min_remote_days": 2
+  },
+
+  "scoring_location_weights": {
+    "SEA": 0.15,
+    "Australia": 0.20,
+    "Europe": 0.25,
+    "remote": 0.05
+  },
+
+  "location_scores": {
+    "remote": 10,
+    "preferred_city_within_commute": 10,
+    "preferred_city_outside_commute": 7,
+    "acceptable_country_no_relocation": 8,
+    "acceptable_country_relocation": 5,
+    "unknown_ambiguous": 3,
+    "excluded": 0
+  }
+}

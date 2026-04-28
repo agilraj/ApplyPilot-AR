@@ -295,6 +295,15 @@ def run_cover_letters(min_score: int = 7, limit: int = 20,
             )
     conn.commit()
 
+    # Tracker: update cover letter paths for generated letters
+    try:
+        from applypilot.tracker.queries import update_cover_letter_path
+        for _r in results:
+            if _r.get("path"):
+                update_cover_letter_path(_r["url"], _r["path"])
+    except Exception as _tracker_err:
+        log.warning("Tracker write failed (cover): %s", _tracker_err)
+
     elapsed = time.time() - t0
     log.info("Cover letters done in %.1fs: %d generated, %d errors", elapsed, saved, error_count)
 

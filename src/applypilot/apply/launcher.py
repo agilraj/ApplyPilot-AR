@@ -194,6 +194,13 @@ def mark_result(url: str, status: str, error: str | None = None,
             WHERE url = ?
         """, (status, error or "unknown", duration_ms, task_id, url))
     conn.commit()
+    # Tracker: mark application as applied in the tracker DB
+    if status == "applied":
+        try:
+            from applypilot.tracker.queries import set_applied
+            set_applied(url)
+        except Exception as _tracker_err:
+            logger.warning("Tracker write failed (apply): %s", _tracker_err)
 
 
 def release_lock(url: str) -> None:

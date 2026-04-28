@@ -1,0 +1,110 @@
+{
+  "base_currency": "MYR",
+  "base_minimum": 10000,
+  "base_target": 12000,
+
+  "regions": {
+    "Malaysia": {
+      "currency": "MYR",
+      "minimum": 10000,
+      "target": 12000,
+      "method": "fixed",
+      "hard_floor": true,
+      "relocation_required": false
+    },
+    "Singapore": {
+      "currency": "SGD",
+      "minimum": 5000,
+      "target": 7000,
+      "method": "fixed",
+      "hard_floor": true,
+      "relocation_required": true,
+      "relocation_condition": "package dependent"
+    },
+    "Australia": {
+      "currency": "AUD",
+      "minimum": 10000,
+      "target": 12000,
+      "method": "fixed",
+      "hard_floor": true,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level",
+      "note": "AUD 10k = ~MYR 28-30k, premium expected for relocation"
+    },
+    "Europe": {
+      "currency": "EUR",
+      "minimum": 5000,
+      "target": 7000,
+      "method": "ppp_adjusted_per_country",
+      "base_eur_minimum": 5000,
+      "base_eur_target": 7000,
+      "hard_floor": true,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level",
+      "priority_countries": ["Germany", "Netherlands", "UK", "Sweden"]
+    },
+    "SEA_other": {
+      "method": "ppp_vs_malaysia",
+      "base_reference": "Malaysia",
+      "hard_floor": true,
+      "relocation_required": true,
+      "relocation_condition": "right package regardless of level"
+    },
+    "remote": {
+      "currency": "MYR",
+      "minimum": 10000,
+      "target": 12000,
+      "method": "fixed",
+      "note": "Remote always benchmarked against Malaysia regardless of company HQ"
+    }
+  },
+
+  "ppp_europe_adjustments": {
+    "Switzerland": 1.50,
+    "Norway": 1.35,
+    "Denmark": 1.20,
+    "Sweden": 1.10,
+    "Netherlands": 1.10,
+    "Germany": 1.00,
+    "France": 1.00,
+    "UK": 0.95,
+    "Belgium": 0.95,
+    "Austria": 1.00,
+    "Spain": 0.80,
+    "Portugal": 0.75,
+    "Poland": 0.55,
+    "Czech Republic": 0.60,
+    "Hungary": 0.55
+  },
+
+  "ppp_sea_adjustments": {
+    "Thailand": 0.85,
+    "Indonesia": 0.60,
+    "Philippines": 0.65,
+    "Vietnam": 0.55,
+    "UAE": 0.95
+  },
+
+  "undisclosed_salary": {
+    "action": "infer",
+    "min_confidence_to_proceed": 40,
+    "relevance_override_resume_score": 9.0,
+    "relevance_override_min_confidence": 40
+  },
+
+  "total_comp": {
+    "include_bonus": true,
+    "target_bonus_pct": 15,
+    "include_allowances": true,
+    "allowance_types": ["travel", "phone", "housing", "car"],
+    "car_allowance_myr": 1500,
+    "include_equity": false
+  },
+
+  "form_fill_rules": {
+    "always_anchor_at_target": true,
+    "never_disclose_floor": true,
+    "current_salary_response": "prefer to discuss",
+    "range_buffer_pct": 20
+  }
+}

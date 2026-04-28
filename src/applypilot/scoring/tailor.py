@@ -572,6 +572,15 @@ def run_tailoring(min_score: int = 7, limit: int = 20,
             )
     conn.commit()
 
+    # Tracker: update resume paths for approved tailored applications
+    try:
+        from applypilot.tracker.queries import update_resume_path
+        for _r in results:
+            if _r.get("path") and _r.get("status") in _success_statuses:
+                update_resume_path(_r["url"], _r["path"])
+    except Exception as _tracker_err:
+        log.warning("Tracker write failed (tailor): %s", _tracker_err)
+
     elapsed = time.time() - t0
     log.info(
         "Tailoring done in %.1fs: %d approved, %d failed_validation, %d failed_judge, %d errors",

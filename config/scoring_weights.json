@@ -1,0 +1,22 @@
+{
+  "resume_fit": 0.45,
+  "role_fit": 0.25,
+  "location_fit": 0.15,
+  "salary_fit": 0.15,
+
+  "salary_fit_scores": {
+    "disclosed_above_target": 10,
+    "disclosed_at_target": 8,
+    "disclosed_above_floor_below_target": 6,
+    "disclosed_borderline": 3,
+    "disclosed_below_floor": 0,
+    "undisclosed_confidence_80_plus": 7,
+    "undisclosed_confidence_60_to_79": 5,
+    "undisclosed_confidence_40_to_59": 3,
+    "undisclosed_confidence_below_40": 1,
+    "undisclosed_no_inference": 2
+  },
+
+  "min_overall_score_to_apply": 6.0,
+  "relevance_override_score_threshold": 9.0
+}

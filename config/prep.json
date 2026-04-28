@@ -1,0 +1,32 @@
+{
+  "output_format": "markdown",
+  "output_dir": "prep_packages",
+  "auto_trigger_on_status": "interview_scheduled",
+
+  "sections": {
+    "company_brief": true,
+    "role_analysis": true,
+    "talking_points": true,
+    "predicted_questions": true,
+    "questions_to_ask": true,
+    "salary_anchor": true,
+    "interviewer_research": true,
+    "compensation_intelligence": true,
+    "relocation_intel": true
+  },
+
+  "salary_negotiation": {
+    "never_disclose_floor": true,
+    "open_anchor_above_target_pct": 15,
+    "current_salary_response": "prefer to discuss at offer stage",
+    "if_pushed_for_number": "anchor at target, not floor"
+  },
+
+  "web_search_sources": [
+    "company about page",
+    "linkedin company page",
+    "recent news last 90 days",
+    "glassdoor reviews",
+    "linkedin salary insights"
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "poll_interval_minutes": 30,
+  "tag_prefix": "AP",
+  "base_email": "YOUR_GMAIL@gmail.com",
+  "scopes": [
+    "https://www.googleapis.com/auth/gmail.readonly",
+    "https://www.googleapis.com/auth/gmail.modify"
+  ],
+
+  "signal_weights": {
+    "signal1_thread_match": 60,
+    "signal2_tag_match": 70,
+    "signal3_llm_match_strong": 40,
+    "signal3_llm_match_moderate": 25,
+    "signal3_llm_match_weak": 10,
+    "agreement_bonus": 20
+  },
+
+  "confidence_thresholds": {
+    "auto_link_and_act": 60,
+    "link_flag_for_review": 30,
+    "hold_unlinked": 0
+  },
+
+  "interview_keywords": [
+    "interview", "schedule a call", "next steps",
+    "shortlisted", "pleased to invite", "available for",
+    "speak with you", "meet with you", "calendly",
+    "book a time", "video call", "phone screen"
+  ],
+
+  "rejection_keywords": [
+    "unfortunately", "not moving forward", "other candidates",
+    "position has been filled", "not successful", "regret to inform"
+  ]
+}

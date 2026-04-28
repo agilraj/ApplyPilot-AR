@@ -96,6 +96,13 @@ def _run_discover(workers: int = 1) -> dict:
         console.print(f"  [red]Smart extract error:[/red] {e}")
         stats["smartextract"] = f"error: {e}"
 
+    # Tracker: sync newly discovered jobs to the applications table
+    try:
+        from applypilot.tracker.queries import sync_discovered_from_jobs
+        sync_discovered_from_jobs()
+    except Exception as _tracker_err:
+        log.warning("Tracker write failed (discover): %s", _tracker_err)
+
     return stats
 
 
