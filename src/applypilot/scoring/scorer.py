@@ -179,6 +179,18 @@ def run_scoring(limit: int = 0, rescore: bool = False) -> dict:
     except Exception as _tracker_err:
         log.warning("Tracker write failed (score): %s", _tracker_err)
 
+    # Salary gate: evaluate all scored jobs for salary floor / inference
+    try:
+        from applypilot.salary.gate import run_salary_gate_all
+        _sal_stats = run_salary_gate_all()
+        log.info(
+            "Salary gate: evaluated=%d dropped=%d flagged=%d errors=%d",
+            _sal_stats["evaluated"], _sal_stats["dropped"],
+            _sal_stats["flagged"], _sal_stats["errors"],
+        )
+    except Exception as _sal_err:
+        log.warning("Salary gate failed (score): %s", _sal_err)
+
     return {
         "scored": len(results),
         "errors": errors,

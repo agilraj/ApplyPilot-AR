@@ -103,6 +103,18 @@ def _run_discover(workers: int = 1) -> dict:
     except Exception as _tracker_err:
         log.warning("Tracker write failed (discover): %s", _tracker_err)
 
+    # Location: classify all discovered jobs into location tiers
+    try:
+        from applypilot.location.classifier import classify_all_discovered
+        _loc_stats = classify_all_discovered()
+        console.print(
+            f"  [dim]Location classifier:[/dim] "
+            f"{_loc_stats['classified']} classified, "
+            f"{_loc_stats['excluded']} excluded"
+        )
+    except Exception as _loc_err:
+        log.warning("Location classifier failed (discover): %s", _loc_err)
+
     return stats
 
 
