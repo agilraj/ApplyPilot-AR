@@ -16,6 +16,10 @@ import logging
 import sys
 from pathlib import Path
 
+# Force UTF-8 output so box-drawing and check-mark characters render on Windows
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+
 # ---------------------------------------------------------------------------
 # Bootstrap: make src/ importable when running as a standalone script
 # ---------------------------------------------------------------------------

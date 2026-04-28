@@ -62,7 +62,8 @@ def _call_llm(subject: str, sender_email: str, body_snippet: str) -> dict:
         body=body_snippet or "(no body)",
     )
     client = get_client()
-    raw = client.ask(prompt, temperature=0.0, max_tokens=512)
+    # 8192 tokens gives gemini-2.5-flash enough room for thinking + JSON output
+    raw = client.ask(prompt, temperature=0.0, max_tokens=8192)
 
     # Strip markdown fences if present
     raw = raw.strip()
@@ -174,7 +175,7 @@ def check_signal3(subject: str, sender_email: str, body_snippet: str) -> dict:
 
     try:
         extracted = _call_llm(subject, sender_email, body_snippet)
-    except Exception as exc:
+    except Exception as exc:  # noqa: BLE001
         log.warning("Signal3 LLM call failed: %s", exc)
         return result
 
