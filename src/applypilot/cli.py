@@ -321,15 +321,22 @@ def status() -> None:
 
     console.print()
 
+    # ── Tracker view: tracked applications with full field breakdown ──────────
+    try:
+        from applypilot.dashboard.cli_view import render_tracker_status
+        render_tracker_status()
+    except Exception as _exc:
+        log.debug("Tracker view unavailable: %s", _exc)
+
 
 @app.command()
 def dashboard() -> None:
-    """Generate and open the HTML dashboard in your browser."""
+    """Generate and open the tracker HTML dashboard in your browser."""
     _bootstrap()
 
-    from applypilot.view import open_dashboard
+    from applypilot.dashboard.html_view import open_tracker_dashboard
 
-    open_dashboard()
+    open_tracker_dashboard()
 
 
 @app.command()
