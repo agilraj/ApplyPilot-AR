@@ -55,13 +55,43 @@ def close_tracker_connection(db_path: Path | str | None = None) -> None:
             conn.close()
 
 
+def _migrate_columns(conn: sqlite3.Connection) -> None:
+    """Add scoring columns to applications table if they don't exist yet.
+
+    SQLite has no ALTER TABLE ... ADD COLUMN IF NOT EXISTS, so we catch the
+    OperationalError that fires when the column already exists.
+    """
+    scoring_cols = [
+        ("score_verdict",             "TEXT"),
+        ("score_role_type",           "TEXT"),
+        ("score_actual_scope",        "TEXT"),
+        ("score_strength_matches",    "TEXT"),
+        ("score_gaps",                "TEXT"),
+        ("score_growth_trajectory",   "REAL"),
+        ("score_competitive_position","TEXT"),
+        ("score_standout_factor",     "TEXT"),
+        ("score_cover_letter_angle",  "TEXT"),
+        ("score_auto_rejected",       "BOOLEAN DEFAULT FALSE"),
+        ("score_prefilter_result",    "TEXT"),
+    ]
+    for col_name, col_type in scoring_cols:
+        try:
+            conn.execute(
+                f"ALTER TABLE applications ADD COLUMN {col_name} {col_type}"
+            )
+        except sqlite3.OperationalError:
+            pass  # column already exists
+    conn.commit()
+
+
 def init_tracker_db(db_path: Path | str | None = None) -> sqlite3.Connection:
     """Create tracker tables. Idempotent — safe to call on every startup.
 
-    Creates three tables:
+    Creates four tables:
       - applications   : one row per job application, full lifecycle
       - email_events   : every inbound email processed by the linker
       - status_history : audit trail of every status transition
+      - run_stats      : one row per scoring run, for cost tracking
     """
     path = db_path or TRACKER_DB_PATH
     Path(path).parent.mkdir(parents=True, exist_ok=True)
@@ -139,6 +169,19 @@ def init_tracker_db(db_path: Path | str | None = None) -> sqlite3.Connection:
           offer_currency            TEXT,
           notes                     TEXT,
 
+          -- Claude scoring fields
+          score_verdict             TEXT,
+          score_role_type           TEXT,
+          score_actual_scope        TEXT,
+          score_strength_matches    TEXT,
+          score_gaps                TEXT,
+          score_growth_trajectory   REAL,
+          score_competitive_position TEXT,
+          score_standout_factor     TEXT,
+          score_cover_letter_angle  TEXT,
+          score_auto_rejected       BOOLEAN DEFAULT FALSE,
+          score_prefilter_result    TEXT,
+
           created_at                DATETIME DEFAULT CURRENT_TIMESTAMP,
           updated_at                DATETIME DEFAULT CURRENT_TIMESTAMP
         );
@@ -182,7 +225,25 @@ def init_tracker_db(db_path: Path | str | None = None) -> sqlite3.Connection:
           notes                 TEXT,
           created_at            DATETIME DEFAULT CURRENT_TIMESTAMP
         );
+
+        CREATE TABLE IF NOT EXISTS run_stats (
+          id                  INTEGER PRIMARY KEY,
+          run_date            DATETIME,
+          jobs_discovered     INTEGER,
+          jobs_prefiltered    INTEGER,
+          jobs_scored         INTEGER,
+          jobs_strong_apply   INTEGER,
+          jobs_apply          INTEGER,
+          jobs_review         INTEGER,
+          jobs_skip           INTEGER,
+          estimated_cost_usd  REAL,
+          created_at          DATETIME DEFAULT CURRENT_TIMESTAMP
+        );
     """)
     conn.commit()
+
+    # Migrate existing DBs that were created before the scoring columns existed
+    _migrate_columns(conn)
+
     log.debug("Tracker DB initialized at %s", path)
     return conn
