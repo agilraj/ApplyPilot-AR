@@ -14,7 +14,7 @@ from datetime import datetime, timezone
 import anthropic
 
 from applypilot.database import get_connection, get_jobs_by_stage
-from applypilot.tracker.db import get_tracker_connection
+from applypilot.tracker.db import get_tracker_connection, init_tracker_db
 
 log = logging.getLogger(__name__)
 
@@ -132,10 +132,18 @@ def _calc_cost(usage) -> float:
 
 def _extract_json(text: str) -> dict:
     """Extract the first {...} JSON block from LLM output."""
-    match = re.search(r"\{.*\}", text, re.DOTALL)
-    if not match:
+    # Strip code fence so reasoning before the fence is excluded
+    fence = re.search(r"```(?:json)?\s*", text)
+    if fence:
+        text = text[fence.end():]
+        end = text.find("```")
+        if end != -1:
+            text = text[:end]
+    start = text.find("{")
+    if start == -1:
         raise ValueError("No JSON block found in response")
-    return json.loads(match.group())
+    obj, _ = json.JSONDecoder().raw_decode(text, start)
+    return obj
 
 
 def score_job_claude(client: anthropic.Anthropic, job: dict) -> dict:
@@ -170,7 +178,7 @@ def score_job_claude(client: anthropic.Anthropic, job: dict) -> dict:
 
     response = client.messages.create(
         model="claude-haiku-4-5-20251001",
-        max_tokens=1024,
+        max_tokens=2048,
         system=[
             {
                 "type": "text",
@@ -316,7 +324,7 @@ def run_scoring(limit: int = 0, rescore: bool = False) -> dict:
 
     # ── Write to DB ───────────────────────────────────────────────────────────
     now          = datetime.now(timezone.utc).isoformat()
-    conn_tracker = get_tracker_connection()
+    conn_tracker = init_tracker_db()
 
     # Mark pre-filtered jobs in both tables
     for url, title, reason in pf_records:

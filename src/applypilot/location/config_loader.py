@@ -9,7 +9,7 @@ from pathlib import Path
 
 log = logging.getLogger(__name__)
 
-_CONFIG_DIR = Path(__file__).parents[4] / "config"
+_CONFIG_DIR = Path(__file__).parents[3] / "config"
 
 
 @lru_cache(maxsize=1)
